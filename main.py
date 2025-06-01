@@ -135,10 +135,44 @@ if st.button("🔍 Cek Sentimen"):
         with col2:
             st.metric(label="Netral", value=f"{proba_dict['Netral']*100:.1f}%")
         
+        # Analyze positive and neutral words
+        st.markdown("### 🔍 Kata Kunci yang Terdeteksi")
+        
+        # Define word lists (expanded based on your training data)
+        positive_words = ['fantastic', 'superb', 'great', 'perfect', 'amazing', 
+                         'breathtaking', 'brilliant', 'heartwarming', 'recommended',
+                         'refreshing', 'compelling', 'believable', 'masterpiece',
+                         'excellent', 'wonderful', 'enjoyable', 'impressive',
+                         'engaging', 'outstanding', 'splendid', 'remarkable']
+        
+        neutral_words = ['decent', 'mediocre', 'okay', 'average', 'confusing',
+                        'predictable', 'uneven', 'boring', 'forced', 'rushed',
+                        'dragged', 'nonsensical', 'empty', 'acceptable', 'standard',
+                        'ordinary', 'typical', 'moderate', 'adequate', 'passable']
+        
+        # Tokenize and find matches
+        tokens = clean_input.split()
+        found_positive = [word for word in tokens if word in positive_words]
+        found_neutral = [word for word in tokens if word in neutral_words]
+        
+        # Display found words with consistent formatting
+        col1, col2 = st.columns(2)
+        with col1:
+            if found_positive:
+                st.markdown(f"**Kata Positif:** {', '.join(found_positive)}")
+            else:
+                st.markdown("**Kata Positif:** Tidak terdeteksi")
+        
+        with col2:
+            if found_neutral:
+                st.markdown(f"**Kata Netral:** {', '.join(found_neutral)}")
+            else:
+                st.markdown("**Kata Netral:** Tidak terdeteksi")
+        
         # Show cleaned text for debugging
         st.markdown("### 🧹 Teks yang Diproses:")
         st.code(clean_input)
-
+        
 # ==== 5. Show training data ====
 with st.expander("📋 Data Latih yang Digunakan (20 Contoh)"):
     st.dataframe(df[['text', 'label']], height=400)
