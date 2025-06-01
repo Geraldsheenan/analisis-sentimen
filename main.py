@@ -33,32 +33,32 @@ for resource in required_nltk_data:
 # ==== 1. Enhanced Dataset (20 samples) ====
 data = {
     'text': [
-        'I love this product, it is amazing!',
-        'Quite good, I like the experience.',
-        'It was okay, nothing special.',
-        'I am satisfied with the service.',
-        'The experience is neutral, not bad not good.',
-        'Good value for money.',
-        'It works fine, I think it\'s okay.',
-        'Really pleasant and enjoyable!',
-        'Just average, neither good nor bad.',
-        'Not bad, just neutral.',
-        'This is absolutely fantastic! Worth every penny.',
-        'The quality exceeded my expectations.',
-        'Mediocre at best, I expected more.',
-        'Completely disappointed with my purchase.',
-        'Works as described, no complaints.',
-        'The best product in this category!',
-        'Not what I hoped for, but acceptable.',
-        'Terrible experience, would not recommend.',
-        'Perfect in every way!',
-        'It\'s fine, does the job but nothing extraordinary.'
+        'This movie was absolutely fantastic! The acting was superb and the plot kept me engaged throughout.',
+        'A decent film with some good moments, though it dragged in the middle.',
+        'The cinematography was beautiful but the story was confusing and hard to follow.',
+        'One of the worst movies I have ever seen. Terrible acting and a nonsensical plot.',
+        'The lead actors had great chemistry, making their relationship believable and compelling.',
+        'Mediocre at best. I expected more from such a talented director.',
+        'A masterpiece of modern cinema. Every frame was perfect.',
+        'Not terrible, but not great either. Just okay for a one-time watch.',
+        'The special effects were amazing, though the dialogue felt forced at times.',
+        'Boring from start to finish. I nearly fell asleep multiple times.',
+        'The soundtrack alone makes this movie worth watching. Simply breathtaking!',
+        'An uneven experience - some scenes were brilliant while others fell completely flat.',
+        'The humor landed perfectly and I laughed throughout the entire film.',
+        'Visually stunning but emotionally empty. All style, no substance.',
+        'A heartwarming story with genuine emotional depth. Highly recommended!',
+        'The pacing was terrible - too slow in the beginning and too rushed at the end.',
+        'Fresh and original take on the genre. Refreshing to see something new!',
+        'The plot twists were predictable and the characters were one-dimensional.',
+        'Perfect balance of action, drama, and comedy. Something for everyone!',
+        'Technically impressive but failed to connect with me on an emotional level.'
     ],
     'label': [
-        'Positif', 'Positif', 'Netral', 'Positif', 'Netral',
-        'Positif', 'Netral', 'Positif', 'Netral', 'Netral',
-        'Positif', 'Positif', 'Netral', 'Netral', 'Netral',
-        'Positif', 'Netral', 'Netral', 'Positif', 'Netral'
+        'Positif', 'Netral', 'Netral', 'Netral', 'Positif',
+        'Netral', 'Positif', 'Netral', 'Netral', 'Netral',
+        'Positif', 'Netral', 'Positif', 'Netral', 'Positif',
+        'Netral', 'Positif', 'Netral', 'Positif', 'Netral'
     ]
 }
 df = pd.DataFrame(data)
