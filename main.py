@@ -21,17 +21,15 @@ nltk_data_path = os.path.join(os.getcwd(), "nltk_data")
 os.makedirs(nltk_data_path, exist_ok=True)
 nltk.data.path.append(nltk_data_path)
 
-# Download required NLTK data with progress feedback
-try:
-    if not os.path.exists(os.path.join(nltk_data_path, "tokenizers/punkt")):
-        nltk.download('punkt', download_dir=nltk_data_path, quiet=False)
-    if not os.path.exists(os.path.join(nltk_data_path, "corpora/stopwords")):
-        nltk.download('stopwords', download_dir=nltk_data_path, quiet=False)
-    if not os.path.exists(os.path.join(nltk_data_path, "corpora/wordnet")):
-        nltk.download('wordnet', download_dir=nltk_data_path, quiet=False)
-except Exception as e:
-    import streamlit as st
-    st.error(f"NLTK data download failed: {str(e)}")
+# Download required NLTK data with better error handling
+required_nltk_data = ['punkt', 'stopwords', 'wordnet', 'omw-1.4']
+
+for resource in required_nltk_data:
+    try:
+        nltk.download(resource, download_dir=nltk_data_path, quiet=True)
+    except Exception as e:
+        st.warning(f"Failed to download NLTK resource '{resource}': {str(e)}")
+
 # ==== 1. Enhanced Dataset (20 samples) ====
 data = {
     'text': [
@@ -77,11 +75,8 @@ def preprocess_text(text):
         text = re.sub(f"[{re.escape(string.punctuation)}]", '', text)
         text = re.sub(r'\d+', '', text)
         
-        # Robust tokenization with fallback
+        # Tokenization with fallback
         try:
-            tokens = nltk.word_tokenize(text)
-        except LookupError:
-            nltk.download('punkt', download_dir=nltk_data_path)
             tokens = nltk.word_tokenize(text)
         except:
             tokens = text.split()  # Basic fallback
@@ -90,7 +85,6 @@ def preprocess_text(text):
         tokens = [lemmatizer.lemmatize(word) for word in tokens]
         return " ".join(tokens)
     except Exception as e:
-        import streamlit as st
         st.warning(f"Text processing warning: {str(e)}")
         return text.lower()  # Minimal processing fallback
 
@@ -151,7 +145,7 @@ with st.expander("📋 Data Latih yang Digunakan (20 Contoh)"):
     st.write(f"Distribusi Label: {df['label'].value_counts().to_dict()}")
 
 # ==== 6. Test examples ====
-st.markdown("### � Contoh Uji Coba")
+st.markdown("### 🧪 Contoh Uji Coba")
 test_examples = [
     "This is the worst product I've ever bought!",
     "I'm so happy with my purchase!",
