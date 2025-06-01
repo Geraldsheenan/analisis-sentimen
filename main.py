@@ -1,8 +1,10 @@
 # main.py
 import streamlit as st
 
+# This MUST be the first Streamlit command
 st.set_page_config(page_title="SVM Review Classifier", layout="centered")
 
+# Now import other libraries
 import pandas as pd
 import re
 import string
