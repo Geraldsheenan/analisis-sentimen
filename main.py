@@ -10,11 +10,6 @@ from sklearn.feature_extraction.text import TfidfVectorizer
 from sklearn.svm import SVC
 from sklearn.pipeline import Pipeline
 
-# Unduh resource NLTK yang diperlukan
-nltk.download('punkt')
-nltk.download('stopwords')
-nltk.download('wordnet')
-
 # ==== 1. Enhanced Dataset (20 samples) ====
 data = {
     'text': [
