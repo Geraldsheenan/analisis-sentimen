@@ -273,3 +273,44 @@ for col, example in zip(cols, test_examples):
             st.write(f"**Prediksi:** {prediction}")
             st.write(f"Positif: {proba_dict['Positif']*100:.1f}%")
             st.write(f"Netral: {proba_dict['Netral']*100:.1f}%")
+
+# Tambahkan di bagian paling atas (setelah st.set_page_config dan sebelum import lainnya)
+
+# Hamburger Menu
+st.sidebar.title("Kelompok 6")
+st.sidebar.markdown("""
+**Mata Kuliah:** Kecerdasan Buatan  
+""")
+
+st.sidebar.markdown("---")
+st.sidebar.header("📚 Tentang Pembuat")
+st.sidebar.markdown("""
+**Gerald Sheenan Vasyah** 32230153   
+**Alvian Rivaldo** 32230141       
+**Dharma Tri Sanjaya:** 32230120      
+**Albert Christian Darwin:** 32230103
+""")
+
+st.sidebar.markdown("---")
+st.sidebar.header("🛠️ Apa yang dibuat?")
+st.sidebar.markdown("""
+- Analisis Sentimen Menggunakan SVM
+""")
+
+st.sidebar.markdown("---")
+st.sidebar.header("📝 Manfaat?")
+st.sidebar.markdown("""
+Memberikan kontribusi dalam pengembangan metode klasifikasi sentimen menggunakan algoritma deep learning.
+""")
+
+# Tambahkan logo/avatar jika ada
+# st.sidebar.image("path_to_your_image.jpg", width=100)
+
+# Untuk versi mobile-friendly, kita bisa tambahkan toggle
+st.sidebar.markdown("""
+<style>
+    [data-testid="collapsedControl"] {
+        display: none
+    }
+</style>
+""", unsafe_allow_html=True)
