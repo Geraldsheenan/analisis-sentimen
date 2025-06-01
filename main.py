@@ -1,5 +1,8 @@
 # main.py
 import streamlit as st
+
+st.set_page_config(page_title="SVM Review Classifier", layout="centered")
+
 import pandas as pd
 import re
 import string
@@ -104,8 +107,6 @@ model = Pipeline([
 model.fit(X, y)
 
 # ==== 4. Streamlit App ====
-st.set_page_config(page_title="SVM Review Classifier", layout="centered")
-
 st.title("📊 Pengecekan Review Positif atau Netral")
 st.write("Masukkan review produk lalu sistem akan mengklasifikasikan apakah review bersifat **Positif** atau **Netral**.")
 
