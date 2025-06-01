@@ -15,6 +15,7 @@ from sklearn.feature_extraction.text import TfidfVectorizer
 from sklearn.svm import SVC
 from sklearn.pipeline import Pipeline
 import os
+from bs4 import BeautifulSoup 
 
 # Configure NLTK data path
 nltk_data_path = os.path.join(os.getcwd(), "nltk_data")
@@ -69,6 +70,7 @@ lemmatizer = WordNetLemmatizer()
 
 def preprocess_text(text):
     try:
+        text = BeautifulSoup(text, "html.parser").get_text()
         text = str(text).lower()
         text = re.sub(r"http\S+|www\S+|https\S+", '', text)
         text = re.sub(r'@\w+|\#', '', text)
@@ -104,7 +106,7 @@ model.fit(X, y)
 
 # ==== 4. Streamlit App ====
 st.title("📊 Pengecekan Review Positif atau Netral")
-st.write("Masukkan review lalu sistem akan mengklasifikasikan apakah review bersifat **Positif** atau **Netral**.")
+st.write("Masukkan review produk lalu sistem akan mengklasifikasikan apakah review bersifat **Positif** atau **Netral**.")
 
 # Input dari pengguna
 user_input = st.text_area("Masukkan review Anda di sini:", height=150)
@@ -139,16 +141,87 @@ if st.button("🔍 Cek Sentimen"):
         st.markdown("### 🔍 Kata Kunci yang Terdeteksi")
         
         # Define word lists (expanded based on your training data)
-        positive_words = ['fantastic', 'superb', 'great', 'perfect', 'amazing', 
-                         'breathtaking', 'brilliant', 'heartwarming', 'recommended',
-                         'refreshing', 'compelling', 'believable', 'masterpiece',
-                         'excellent', 'wonderful', 'enjoyable', 'impressive',
-                         'engaging', 'outstanding', 'splendid', 'remarkable']
+        positive_words = [
+    # Strong positive
+    'fantastic', 'superb', 'excellent', 'outstanding', 'brilliant', 'amazing', 'wonderful',
+    'perfect', 'flawless', 'exceptional', 'phenomenal', 'magnificent', 'stellar', 'splendid',
+    'extraordinary', 'remarkable', 'incredible', 'awesome', 'fabulous', 'terrific',
+    
+    # Emotional positive
+    'heartwarming', 'touching', 'moving', 'inspiring', 'uplifting', 'joyful', 'delightful',
+    'charming', 'captivating', 'enchanting', 'mesmerizing', 'electrifying', 'thrilling',
+    'exhilarating', 'euphoric', 'blissful', 'peaceful', 'serene', 'comforting',
+    
+    # Quality descriptors
+    'masterpiece', 'gem', 'treasure', 'masterful', 'skillful', 'polished', 'refined',
+    'elegant', 'sophisticated', 'artistic', 'creative', 'innovative', 'original',
+    'unique', 'fresh', 'groundbreaking', 'revolutionary', 'visionary',
+    
+    # Engagement
+    'engaging', 'compelling', 'absorbing', 'gripping', 'riveting', 'enthralling',
+    'addictive', 'unputdownable', 'page-turner', 'binge-worthy', 'immersive',
+    
+    # Performance praise
+    'believable', 'convincing', 'natural', 'authentic', 'genuine', 'sincere',
+    'charismatic', 'dynamic', 'expressive', 'powerful', 'emotional', 'nuanced',
+    
+    # Recommendation
+    'recommended', 'must-see', 'must-read', 'essential', 'praiseworthy', 'commendable',
+    'admirable', 'laudable', 'worthy', 'valuable', 'beneficial',
+    
+    # Enjoyment
+    'enjoyable', 'pleasurable', 'satisfying', 'gratifying', 'fulfilling', 'rewarding',
+    'fun', 'entertaining', 'amusing', 'humorous', 'hilarious', 'laugh-out-loud',
+    
+    # Visual/Audio praise
+    'breathtaking', 'stunning', 'gorgeous', 'beautiful', 'picturesque', 'aesthetic',
+    'visually', 'cinematic', 'harmonic', 'melodic', 'catchy', 'foot-tapping', 'good'
+]
         
-        neutral_words = ['decent', 'mediocre', 'okay', 'average', 'confusing',
-                        'predictable', 'uneven', 'boring', 'forced', 'rushed',
-                        'dragged', 'nonsensical', 'empty', 'acceptable', 'standard',
-                        'ordinary', 'typical', 'moderate', 'adequate', 'passable']
+        neutral_words = [
+    # Dari neutral_words
+    'decent', 'mediocre', 'average', 'middling', 'moderate', 'adequate', 'passable',
+    'acceptable', 'tolerable', 'serviceable', 'competent', 'unexceptional', 'unremarkable',
+    'ordinary', 'commonplace', 'run-of-the-mill', 'standard', 'typical', 'conventional',
+    'formulaic', 'generic', 'cookie-cutter', 'by-the-numbers',
+    'okay', 'alright', 'so-so', 'fair', 'not bad', 'nothing special', 'uninspired',
+    'unoriginal', 'derivative', 'predictable', 'clichéd', 'stereotypical', 'formulaic',
+    'forgettable', 'disposable', 'lackluster', 'unmemorable', 'unimpressive',
+    'functional', 'practical', 'utilitarian', 'workmanlike', 'straightforward', 'basic',
+    'minimal', 'simple', 'plain', 'bare-bones', 'no-frills', 'underwhelming',
+    'uneven', 'inconsistent', 'patchy', 'spotty', 'erratic', 'unbalanced', 'disjointed',
+    'fragmented', 'meandering', 'rambling', 'dragged', 'rushed', 'protracted', 'lengthy',
+    'confusing', 'complicated', 'convoluted', 'muddled', 'unclear', 'ambiguous', 'opaque',
+    'abstract', 'cryptic', 'perplexing', 'bewildering', 'disorienting',
+    'detached', 'impersonal', 'cold', 'clinical', 'sterile', 'emotionless', 'unemotional',
+    'reserved', 'restrained', 'understated', 'subtle', 'low-key', 'muted', 'sober',
+    
+    # Dari negative_words
+    'terrible', 'horrible', 'awful', 'dreadful', 'atrocious', 'abysmal', 'appalling',
+    'disastrous', 'laughable', 'pathetic', 'pitiful', 'woeful', 'execrable', 'abominable',
+    'repugnant', 'revolting', 'disgusting', 'offensive', 'insulting', 'vile',
+    'amateurish', 'sloppy', 'shoddy', 'cheap', 'tacky', 'flimsy', 'poorly-made',
+    'low-quality', 'subpar', 'inferior', 'second-rate', 'third-rate', 'bargain-basement',
+    'half-baked', 'unfinished', 'unpolished', 'rough', 'unrefined', 'crude',
+    'boring', 'tedious', 'dull', 'monotonous', 'repetitive', 'mind-numbing', 'sleep-inducing',
+    'uninteresting', 'uninvolving', 'unexciting', 'flat', 'lifeless', 'soulless', 'empty',
+    'hollow', 'shallow', 'superficial', 'vacuous', 'pointless', 'meaningless',
+    'wooden', 'stiff', 'awkward', 'unnatural', 'forced', 'strained', 'contrived',
+    'overacted', 'hammy', 'melodramatic', 'exaggerated', 'overwrought', 'over-the-top',
+    'underwhelming', 'unconvincing', 'implausible', 'unbelievable', 'fake', 'phony',
+    'confused', 'incoherent', 'illogical', 'nonsensical', 'ridiculous', 'absurd', 'preposterous',
+    'implausible', 'unrealistic', 'far-fetched', 'contrived', 'forced', 'predictable',
+    'derivative', 'clichéd', 'hackneyed', 'trite', 'stale', 'overused', 'unoriginal',
+    'choppy', 'jarring', 'disjointed', 'inconsistent', 'uneven', 'messy', 'sloppy',
+    'poorly-edited', 'badly-paced', 'overlong', 'bloated', 'self-indulgent', 'pretentious',
+    'pompous', 'arrogant', 'condescending', 'patronizing', 'smug', 'self-satisfied',
+    'depressing', 'bleak', 'grim', 'dreary', 'miserable', 'heartbreaking', 'devastating',
+    'harrowing', 'disturbing', 'upsetting', 'unsettling', 'discomforting', 'traumatic',
+    'frustrating', 'annoying', 'irritating', 'aggravating', 'infuriating', 'maddening',
+    'hate', 'loathe', 'despise', 'detest', 'abhor', 'can\'t stand', 'dislike', 'unpleasant',
+    'disappointing', 'letdown', 'underwhelming', 'regrettable', 'waste', 'wasted',
+    'mishandled', 'botched', 'ruined', 'destroyed', 'butchered', 'mangled'
+]
         
         # Tokenize and find matches
         tokens = clean_input.split()
@@ -172,7 +245,7 @@ if st.button("🔍 Cek Sentimen"):
         # Show cleaned text for debugging
         st.markdown("### 🧹 Teks yang Diproses:")
         st.code(clean_input)
-        
+
 # ==== 5. Show training data ====
 with st.expander("📋 Data Latih yang Digunakan (20 Contoh)"):
     st.dataframe(df[['text', 'label']], height=400)
