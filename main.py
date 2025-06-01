@@ -1,4 +1,4 @@
-# svm_review_app.py
+# main.py
 import streamlit as st
 import pandas as pd
 import re
@@ -9,7 +9,24 @@ from nltk.stem import WordNetLemmatizer
 from sklearn.feature_extraction.text import TfidfVectorizer
 from sklearn.svm import SVC
 from sklearn.pipeline import Pipeline
+import os
 
+# Configure NLTK data path
+nltk_data_path = os.path.join(os.getcwd(), "nltk_data")
+os.makedirs(nltk_data_path, exist_ok=True)
+nltk.data.path.append(nltk_data_path)
+
+# Download required NLTK data with progress feedback
+try:
+    if not os.path.exists(os.path.join(nltk_data_path, "tokenizers/punkt")):
+        nltk.download('punkt', download_dir=nltk_data_path, quiet=False)
+    if not os.path.exists(os.path.join(nltk_data_path, "corpora/stopwords")):
+        nltk.download('stopwords', download_dir=nltk_data_path, quiet=False)
+    if not os.path.exists(os.path.join(nltk_data_path, "corpora/wordnet")):
+        nltk.download('wordnet', download_dir=nltk_data_path, quiet=False)
+except Exception as e:
+    import streamlit as st
+    st.error(f"NLTK data download failed: {str(e)}")
 # ==== 1. Enhanced Dataset (20 samples) ====
 data = {
     'text': [
@@ -48,15 +65,29 @@ stop_words = set(stopwords.words('english'))
 lemmatizer = WordNetLemmatizer()
 
 def preprocess_text(text):
-    text = str(text).lower()
-    text = re.sub(r"http\S+|www\S+|https\S+", '', text)
-    text = re.sub(r'@\w+|\#', '', text)
-    text = re.sub(f"[{re.escape(string.punctuation)}]", '', text)
-    text = re.sub(r'\d+', '', text)
-    tokens = nltk.word_tokenize(text)
-    tokens = [word for word in tokens if word not in stop_words]
-    tokens = [lemmatizer.lemmatize(word) for word in tokens]
-    return " ".join(tokens)
+    try:
+        text = str(text).lower()
+        text = re.sub(r"http\S+|www\S+|https\S+", '', text)
+        text = re.sub(r'@\w+|\#', '', text)
+        text = re.sub(f"[{re.escape(string.punctuation)}]", '', text)
+        text = re.sub(r'\d+', '', text)
+        
+        # Robust tokenization with fallback
+        try:
+            tokens = nltk.word_tokenize(text)
+        except LookupError:
+            nltk.download('punkt', download_dir=nltk_data_path)
+            tokens = nltk.word_tokenize(text)
+        except:
+            tokens = text.split()  # Basic fallback
+            
+        tokens = [word for word in tokens if word not in stop_words]
+        tokens = [lemmatizer.lemmatize(word) for word in tokens]
+        return " ".join(tokens)
+    except Exception as e:
+        import streamlit as st
+        st.warning(f"Text processing warning: {str(e)}")
+        return text.lower()  # Minimal processing fallback
 
 df['clean_text'] = df['text'].apply(preprocess_text)
 
