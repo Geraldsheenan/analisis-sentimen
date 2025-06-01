@@ -104,7 +104,7 @@ model.fit(X, y)
 
 # ==== 4. Streamlit App ====
 st.title("📊 Pengecekan Review Positif atau Netral")
-st.write("Masukkan review produk lalu sistem akan mengklasifikasikan apakah review bersifat **Positif** atau **Netral**.")
+st.write("Masukkan review lalu sistem akan mengklasifikasikan apakah review bersifat **Positif** atau **Netral**.")
 
 # Input dari pengguna
 user_input = st.text_area("Masukkan review Anda di sini:", height=150)
