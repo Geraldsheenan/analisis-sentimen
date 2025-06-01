@@ -1,4 +1,5 @@
-streamlit==1.14.1
+streamlit
 pandas==2.2.3
+altair==5.5.0
 nltk==3.9.1
 scikit-learn==1.6.1
